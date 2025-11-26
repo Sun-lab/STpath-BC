@@ -1,4 +1,4 @@
-library(tidyverse)      # Includes readr, dplyr, stringr, tidyr, ggplot2
+library(tidyverse)  
 library(survival)
 library(survminer)
 library(glmnet)
@@ -255,17 +255,23 @@ for (var in prop_tert_vars) {
   base_name <- gsub("_overall_proportion_tert$", "", var)
   
   p1 <- ggsurvplot(
-    fit, data = df_tert, pval = TRUE,
+    fit, 
+    data = df_tert, 
+    pval = TRUE,
     palette = c("green", "blue", "orange", "red"),
-    risk.table = FALSE, legend.title = base_name,
+    risk.table = FALSE,
+    legend.title = base_name,
     legend.labs = levels(df_tert[[var]]),
-    xlab = "Time (days)", ylab = "PFS Probability",
+    xlab = "Time (days)", 
+    ylab = "Progression-Free Survival Probability",
     ggtheme = theme_bw(base_size = 18)
   )
   p_prop_list[[var]] <- p1
 }
 
-combined_prop <- ggarrange(plotlist = lapply(p_prop_list, function(x) x$plot), nrow = 1) +
+combined_prop <- ggarrange(plotlist = lapply(p_prop_list[prop_tert_vars],
+                                             function(x) x$plot), 
+                           nrow = 1) +
   plot_annotation(title = "KM: PFI by Overall Proportion Groups", 
                   theme = theme(plot.title = element_text(hjust = 0.5, size = 22, face = "bold")))
 
@@ -284,17 +290,21 @@ dist_median_cuts <- map_dfr(dist_median, function(v) {
   m <- median(x, na.rm = TRUE)
   tibble(
     variable = v, cutpoint_median = m,
-    n_low = sum(x <= m, na.rm = TRUE), n_high = sum(x > m, na.rm = TRUE)
+    n_low = sum(x <= m, na.rm = TRUE), 
+    n_high = sum(x > m, na.rm = TRUE)
   )
 })
 
 dist_median_cuts
 
-p_dist_hist <- ggplot(df_long_cont %>% filter(variable %in% dist_median), aes(x = value)) +
+p_dist_hist <- ggplot(
+  df_long_cont %>% filter(variable %in% dist_median), 
+  aes(x = value)) +
   geom_histogram(bins = 40, fill = "grey30", color = "white") +
   facet_wrap(~ variable, scales = "free", ncol = 3) +
   theme_bw(base_size = 11) +
-  geom_vline(aes(xintercept = cutpoint_median), data = dist_median_cuts, linetype = "dashed", color = "blue") +
+  geom_vline(aes(xintercept = cutpoint_median),
+             data = dist_median_cuts, linetype = "dashed", color = "blue") +
   labs(title = "Histograms: Median Distance", x = "Value", y = "Count")
 
 ggsave("BRCA_histograms_median_distance.jpg", p_dist_hist, width = 10, height = 10)
@@ -318,16 +328,19 @@ for (var in distance_bin_vars) {
   base_name <- gsub("_(mean|median|overall_proportion)_bin$", "", var)
   
   p1 <- ggsurvplot(
-    fit, data = df, pval = TRUE,
+    fit, 
+    data = df,
+    pval = TRUE,
     palette = c("green", "blue", "orange", "red"),
-    risk.table = FALSE, legend.title = base_name,
+    risk.table = FALSE, 
+    legend.title = base_name,
     legend.labs = levels(df[[var]]),
-    xlab = "Time (days)", ylab = "PFS Probability",
+    xlab = "Time (days)",
+    ylab = "Progression-Free Survival Probability",
     ggtheme = theme_bw(base_size = 18)
   )
   p_dist_median_list[[var]] <- p1
 }
-
 
 combined_median <- ggarrange(
   plotlist = lapply(p_dist_median_list, function(x) x$plot),
@@ -341,9 +354,10 @@ ggsave("BRCA_KM_PFI_by_Distance_All_Median_Groups.png", combined_median, width =
 
 
 #### Age: KM quartiles + histogram ####
-
 # Histogram
-p_age_hist <- ggplot(df_long_cont %>% filter(variable == "Age"), aes(x = value)) +
+p_age_hist <- ggplot(
+  df_long_cont %>% filter(variable == "Age"), 
+  aes(x = value)) +
   geom_histogram(bins = 40, fill = "grey30", color = "white") +
   facet_wrap(~ variable, scales = "free", ncol = 3) +
   theme_bw(base_size = 11) +
@@ -355,7 +369,10 @@ ggsave("BRCA_histograms_age.jpg", p_age_hist, width = 3, height = 3)
 age_cuts <- quantile(df$Age, probs = c(0, 0.25, 0.50, 0.75, 1), na.rm = TRUE)
 age_cuts
 df <- df %>%
-  mutate(Age_quart = cut(Age, breaks = age_cuts, include.lowest = TRUE, labels = c("Q1", "Q2", "Q3", "Q4")))
+  mutate(Age_quart = cut(Age, 
+                         breaks = age_cuts, 
+                         include.lowest = TRUE,
+                         labels = c("Q1", "Q2", "Q3", "Q4")))
 df$Age_quart <- factor(df$Age_quart)
 
 table(df$Age_quart)
@@ -364,9 +381,17 @@ table(df$Age_quart)
 fit_age <- survfit(Surv(PFI.time, PFI) ~ Age_quart, data = df)
 
 png(paste0("BRCA_KM_PFI_by_age_quart.png"), width = 500, height = 500)
-p1 <- ggsurvplot(fit_age, data = df, pval = TRUE, palette = c("green", "blue", "orange", "red"),
-                 legend.title = "Age Quartiles", legend.labs = levels(df[["Age_quart"]]),
-                 xlab = "Time (days)", ylab = "PFS Probability", ggtheme = theme_bw(base_size = 18), combine = TRUE)
+p1 <- ggsurvplot(
+  fit_age,
+  data = df,
+  pval = TRUE, 
+  palette = c("green", "blue", "orange", "red"),
+  legend.title = "Age Quartiles", 
+  legend.labs = levels(df[["Age_quart"]]),
+  xlab = "Time (days)", 
+  ylab = "Progression-Free Survival Probability",
+  ggtheme = theme_bw(base_size = 18), 
+  combine = TRUE)
 
 print(p1)
 dev.off()
@@ -397,8 +422,8 @@ dev.off()
 
 # KM by Subtype
 df$subtype <- factor(df$subtype, 
-                           levels = c("Basal", "Her2", "LumA", "LumB", "Normal"),
-                           labels = c("Basal", "Her2", "LumA", "LumB", "Normal"))
+                     levels = c("Basal", "Her2", "LumA", "LumB", "Normal"),
+                     labels = c("Basal", "Her2", "LumA", "LumB", "Normal"))
 table(df$subtype)
 fit_pfi_subtype <- survfit(Surv(PFI.time, PFI) ~ subtype, data=df)
 
@@ -433,7 +458,7 @@ cor_all <- cor(df[, all_vars],
 # Create heatmap
 distance_stem <- sub("_(mean|median|std|iqr)$", "", distance_vars)
 cell_from <- sub("_to_.*", "", distance_stem)
-cell_to   <- sub(".*_to_", "", distance_stem)
+cell_to <- sub(".*_to_", "", distance_stem)
 
 pair_id <- ifelse(cell_from < cell_to,
                   paste(cell_from, cell_to, sep = "_"),
@@ -465,7 +490,6 @@ right_ann <- rowAnnotation(
   show_legend = FALSE,
   show_annotation_name = FALSE
 )
-
 
 ht <- Heatmap(
   cor_all,
@@ -532,7 +556,7 @@ for (pair in names(dir_groups)) {
   df_sub <- df_sub[, sapply(df_sub, is.numeric), drop = FALSE]
   
   if (ncol(df_sub) < 2) next
-
+  
   colnames(df_sub) <- sub(".*_(mean|median|std|iqr)$", "\\1", vars)
   
   p <- ggpairs(
