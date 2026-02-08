@@ -11,11 +11,11 @@ Author: Saishi Cui
 Date: February 2026
 
 Cell Types (BRCA):
-- Tumor: Cancer cells 
-- Stromal: Stromal cells  
-- pan_APC: Antigen presenting cells
-- T_cell: T cells
-- Normal_Epithelial: Normal epithelial cells
+- **Tumor Cells** - Malignant epithelial cells
+- **Stromal Cells** - Fibroblasts and cancer-associated fibroblasts (CAFs)
+- **Normal Epithelial Cells** - Non-malignant epithelial cells
+- **T Cells** - T lymphocytes (CD4+ and CD8+ T cells)
+- **pan-APC Cells** - B cells and Myeloid cells combined (antigen-presenting cells)
 
 Models:
 - Individual foundation models: ResNet50, Conch, ProvGigapath, UNI2h, Virchow, Virchow2
