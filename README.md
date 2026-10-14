@@ -1,7 +1,6 @@
 # STpath-BC: Xenium Breast Cancer Models
 
 H&E tiles, Xenium annotations, encoder features, XGBoost models, and TCGA-BRCA analyses.
-The workflow and analysis organization follows [STpath-CRC](https://github.com/Sun-lab/STpath-CRC).
 
 ```text
 Workflow/          Preparation, annotation, training, and TCGA steps (01–08)
