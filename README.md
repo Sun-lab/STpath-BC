@@ -1,253 +1,192 @@
-# STPath-BRCA: Spatial Transcriptomics Pathology for Breast Cancer
+# STpath-BC: Xenium Breast Cancer Models
 
-A comprehensive computational framework for predicting cell type proportions in breast cancer H&E images using multiple foundation models and machine learning approaches.
+H&E tiles, Xenium annotations, encoder features, XGBoost models, and TCGA-BRCA analyses.
+The workflow and analysis organization follows [STpath-CRC](https://github.com/Sun-lab/STpath-CRC).
 
-## Overview
-
-The framework integrates multiple histopathology foundation models with XGBoost classifiers to predict spatial distributions of cell types in breast cancer tissues, validated against spatial transcriptomics data.
-
-## Key Features
-
-- **Multi-modal Foundation Models**: Integration of 6 state-of-the-art histopathology foundation models (ResNet50, Conch, UNI2-h, ProvGigaPath, Virchow, Virchow2)
-- **Cell Type Deconvolution**: Spatial transcriptomics-guided cell type prediction for 8 major cell populations
-- **TCGA Analysis**: Comprehensive survival analysis and clinical correlation studies
-- **Cross-validation Framework**: Leave-one-individual-out (LOIO) validation strategy
-- **Visualization Tools**: Hexagonal heatmaps, UMAP embeddings, and soft segmentation
-
-## Cell Type Classification
-
-The framework predicts proportions for 8 merged cell types:
-
-1. **Cancer Epithelial Cells**:
-2. **CAFs/PVL**
-3. **Normal Epithelial Cells**
-4. **T Cells**
-5. **B Cells**
-6. **Myeloid cells**
-7. **Plasma Cells**
-8. **Endothelial Cells**
-
-## Repository Structure
-
-```
-STPath-BRCA/
-├── Scripts_for_Analysis/          # Scripts for generating manuscript figures
-│
-├── Workflow/                      # Complete analysis workflow
-│   ├── StepA_Data_Preparation/
-│   │
-│   ├── StepB_Cell_Type_Deconvolution/
-│   │
-│   ├── StepC_Feature_Extraction_and_Train_Models/
-│   │
-│   └── StepD_TCGA_Data_Preparation/
-│
-├── Figures/                       # Manuscript figures and supplementary figures
-├── config_template.yaml           # Configuration template
-├── README.md                      # This file
-└── LICENSE                        # License information
+```text
+Workflow/          Preparation, annotation, training, and TCGA steps (01–08)
+Scripts_for_Analysis/ Figure 6, S9, S15, S16, and analysis commands
+xenium_pipeline/   Shared code and Bilous preparation helpers
+jobs/              One generic Slurm launcher
+tables/            Curated inputs and numerical figure data
+tests/             Core scientific checks
 ```
 
-## Workflow Overview
+## Local setup
 
-### Step A: Data Preparation
-- Prepare spatial transcriptomics data for CARD deconvolution
-- Extract H&E image patches at matched spatial locations
-- Preprocess single-cell reference data for CARD deconvolution
-
-### Step B: Cell Type Deconvolution
-- Run CARD deconvolution using single-cell reference data
-- Validate deconvolution results against known tissue regions
-- Generate visualization of cell type spatial distributions
-
-### Step C: Feature Extraction & Model Training
-- Extract features using 6 foundation models
-- Train XGBoost models with LOIO cross-validation
-- Evaluate model performance and feature importance
-- Generate calibrated predictions
-
-### Step D: TCGA Data Processing
-- Convert TCGA whole slide images from DCM to TIFF format
-- Process TCGA-COAD cohort for validation studies
-- Calculate distance metrics between cell types
-- Perform survival analysis
-
-## Requirements
-
-### Software Dependencies
-```
-Python 3.8+
-R 4.0+ (for CARD deconvolution)
-
-Python packages:
-- torch
-- timm
-- conch
-- huggingface_hub
-- xgboost
-- numpy
-- pandas
-- matplotlib
-- seaborn
-- scanpy
-- lifelines
-- scipy
-- scikit-learn
-- umap-learn
-- tqdm
-- pillow
-- opencv-python
-
-R packages:
-- CARD
-- Seurat
-```
-
-### Hardware Requirements
-- **Recommended**: GPU with 16GB+ VRAM (for foundation model feature extraction)
-- **Minimum**: CPU with 32GB RAM
-- **Storage**: 100GB+ for models, data, and intermediate results
-
-### Data Requirements
-1. **Spatial Transcriptomics Data**: Spot-level gene expression and spatial coordinates
-2. **Single-cell Reference**: Annotated scRNA-seq data for CARD deconvolution
-3. **H&E Images**: Whole slide images or tissue regions
-4. **TCGA Data** (optional): For validation and survival analysis
-
-## Getting Started
-
-### 1. Environment Setup
+Use Python 3.11. Run these commands from this checkout (macOS/Linux):
 
 ```bash
-# Create conda environment
-conda create -n stpath python=3.9
-conda activate stpath
-
-# Install Python dependencies
-pip install torch torchvision torchaudio
-pip install timm transformers huggingface_hub
-pip install xgboost scikit-learn
-pip install numpy pandas matplotlib seaborn
-pip install scanpy lifelines
-pip install umap-learn tqdm pillow opencv-python
+python3.11 -m venv .venv
+source .venv/bin/activate
+python -m pip install --upgrade pip
+python -m pip install -r requirements.txt
+python -m pip install 'git+https://github.com/mahmoodlab/CONCH.git'
+export XENIUM_ROOT=/absolute/path/to/Xenium
+export STPATH_TCGA_TIFF_ROOT=/absolute/path/to/TCGA_BRCA_HE_filtered_tiff
 ```
 
-### 2. Configuration
+CONCH is installed from its [upstream repository](https://github.com/mahmoodlab/CONCH#installation).
 
-Copy and edit the configuration template:
+The checkout contains code and curated figure inputs. Put raw datasets, alignment
+transforms, accepted annotation decisions, embeddings, models, and clinical inputs
+under `XENIUM_ROOT`. Dataset folders are defined in `dataset_manifest.json`; result
+and checkpoint paths are defined in `storage_layout.json`. Both resolve relative
+to `XENIUM_ROOT`, which can be separate from the checkout.
+
+CPU execution is supported. For an NVIDIA GPU, install the appropriate PyTorch
+build and choose `--device cuda`. Training feature extraction also accepts
+`--device mps` on Apple Silicon; use CPU if an encoder does not support MPS.
+Large encoders and whole-slide cohorts need substantial RAM, disk space, and time.
+
+Pathology encoders require access to their gated Hugging Face model repositories.
+After access is granted, save a login once:
+
 ```bash
-cp config_template.yaml config.yaml
+python Workflow/08_predict_tcga.py cohort -- login
 ```
 
-Edit paths and parameters according to your data location and computing resources.
+Alternatively, provide `HF_TOKEN` in your environment. ResNet50 and regeneration
+of Figure 6 from the included tables do not require gated model access.
 
-## Key Analyses
+## Local workflow
 
-### Foundation Model Comparison
-- Systematic comparison of 6 foundation models (Figure 4)
-- Feature importance analysis across models
-- Model complementarity assessment
+| Stage | Steps | Work |
+| --- | --- | --- |
+| A: Data Preparation | 01–03 | Prepare data and review H&E alignment |
+| B: Cell Annotation | 04–06 | Annotate cells and save manual decisions |
+| C: Features and Models | 07 | Extract features, build targets, train, and compare models |
+| D: TCGA Preparation | 08 | Prepare and predict TCGA-BRCA |
+| Analysis | Figure scripts | Run analyses and generate figures |
 
-### Spatial Analysis
-- Cell type distance calculations using weighted minimum distance
-- Hard classification based on quantile thresholds
-- Hexagonal heatmap visualization
-
-### Survival Analysis
-- Cox proportional hazards models
-- Kaplan-Meier survival curves
-- Integration of cell type proportions, spatial metrics, and clinical variables
-
-### Gene Expression Prediction
-- Correlation between histopathology features and gene expression
-- Cell type-specific marker gene analysis
-- Partial correlation controlling for cell type composition
-
-## Model Training Strategy
-
-### Leave-One-Individual-Out (LOIO) Cross-Validation
-- Each individual (patient) is held out once as test set
-- Models trained on all other individuals
-- Ensures generalization across patients
-- Prevents overfitting to individual-specific patterns
-
-### Calibration
-- Quantile-based calibration for improved prediction accuracy
-- Cell type-specific outlier handling
-- Preservation of rank ordering while adjusting scale
-
-### Feature Selection
-- Top 30% most important features selected per model
-- Combined feature set from multiple foundation models
-- Reduces dimensionality while maintaining predictive power
-
-## Output Files
-
-### Model Predictions
-- CSV files with patch-level predictions
-- JSON files with metadata and overall proportions
-- Feature importance scores
-
-### Visualizations
-- UMAP embeddings colored by various factors
-- Hexagonal heatmaps for spatial distributions
-- Violin plots for cell type proportions
-- Scatter plots for model comparisons
-- Kaplan-Meier survival curves
-
-### Statistical Results
-- Cox regression tables
-- Model performance metrics (Spearman correlation, MAE, RMSE)
-- Feature importance rankings
-
-## Performance Metrics
-
-### Model Evaluation
-- **Spearman Correlation**: Primary metric for proportion prediction
-- **Mean Absolute Error (MAE)**: Absolute prediction error
-- **Root Mean Squared Error (RMSE)**: Squared error magnitude
-
-## Computational Resources
-
-### Processing Time
-- **Feature Extraction**: ~2-5 minutes per WSI (GPU)
-- **Model Training**: ~30-60 minutes per cell type (LOIO)
-- **Prediction**: ~1-3 minutes per WSI
-- **TCGA Analysis**: ~10-20 minutes per sample
-
-### Memory Requirements
-- **Feature Extraction**: 16GB GPU VRAM recommended
-- **Model Training**: 32GB RAM minimum
-- **Large WSI Processing**: 64GB RAM recommended
-
-## Citation
-
-If you use this code in your research, please cite:
-
-```
-[Citation information to be added upon publication]
+```bash
+python Workflow/01_prepare_data.py he --dataset 10x
+python Workflow/01_prepare_data.py tiles --dataset 10x
+python Workflow/01_prepare_data.py select
+python Workflow/01_prepare_data.py markers
+jupyter lab Workflow/
 ```
 
-## Related Repositories
+Use steps 01–08 as the stage order; finish any required alignment before extracting
+tiles. The alignment and annotation-review notebooks save manual decisions used
+by later scripts. Repeat preparation for the datasets listed by `--help`.
+After annotation is complete:
 
-- **STPath-Software**: Standalone prediction tool for clinical use (separate repository)
-- **COAD Analysis**: Breast cancer application scripts (see `/Users/scui2/Desktop/BRCA_github/`)
+```bash
+python Workflow/07_fit_models.py features --device cpu --batch-size 1 --workers 0
+python Workflow/07_fit_models.py targets --cell-type tumor_cells
+python Workflow/07_fit_models.py train --cell-type tumor_cells -- \
+  --parallel-model-jobs 1 --nthread 1 --combined-nthread 1
+```
 
-## License
+Repeat `targets` and `train` for all five cell types. To include the ResNet50
+comparator in a new training run, append `--include-resnet50` to the training
+command. Training defaults to one model job and detects the available CPU budget;
+the explicit one-thread settings above also work on smaller machines.
 
-This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
+Extract Bilous images with
+`python -m xenium_pipeline.bilous_extract_batch /path/to/Bilous_2026`.
 
-## Contact
+For local TCGA prediction, use exported final models, training feature metadata,
+and a verified TIFF resolution audit. This processes all eligible 75 µm tiles
+for one slide without Slurm:
 
-For questions, issues, or collaborations, please open an issue on GitHub or contact the authors.
+```bash
+python Workflow/08_predict_tcga.py cohort -- local \
+  --slides TCGA-4H-AAAK-01Z-00-DX1 \
+  --input-dir "$STPATH_TCGA_TIFF_ROOT" \
+  --audit-csv /absolute/path/to/tiff_resolution_audit.csv \
+  --output-dir "$XENIUM_ROOT/tcga_brca_prediction/local_75um" \
+  --crop-size-um 75 --device cpu --batch-size 1 --threads 1 \
+  --include-completed-75um
+```
 
-## Acknowledgments
+Replace the slide ID with your TIFF filename or stem. Use `--all-slides` instead
+of `--slides ...` to process a cohort sequentially. Repeat the same command to
+resume; completed slides are reused. Add `--dry-run` to inspect the selected
+manifest without inference. A local NVIDIA GPU can use `--device cuda`.
+Optional `--model-dirs-json` and `--training-feature-root` select relocated exports.
 
-- Foundation models: Conch, UNI, ProvGigaPath, Virchow, Virchow2
-- CARD deconvolution method
-- TCGA consortium for data access
-- All data contributors and collaborators
+Run each script with `--help`; forwarded runner options use `ACTION -- --help`.
+Initial clustering uses r1.3; uncertain and epithelial reclustering use r0.7.
+Normal-epithelial all-zero folds are included.
 
----
+Run the checks with `python -m unittest discover -s tests`.
 
-**Last Updated**: December 2025
+## Figures and survival analysis
+
+| Figures | Code |
+| --- | --- |
+| 6A, 6B, 6C | `Scripts_for_Analysis/Figure6_ABC.py` |
+| S9A and S9B | `Scripts_for_Analysis/FigureS9_AB.py` |
+| S15, S16 | `Scripts_for_Analysis/FigureS15_S16.py` |
+
+Figure 6 can be regenerated locally from the included tables:
+
+```bash
+python Scripts_for_Analysis/Figure6_ABC.py --output-dir figures
+```
+
+For S9, use the accepted annotation and tile inputs to generate source panels,
+then assemble the extracted package:
+
+```bash
+python Scripts_for_Analysis/Run_Analyses.py reference
+python Scripts_for_Analysis/FigureS9_AB.py /absolute/path/to/extracted_S9_package
+```
+
+With the full prediction and clinical inputs configured in `storage_layout.json`:
+
+```bash
+python Scripts_for_Analysis/Run_Analyses.py survival
+python Scripts_for_Analysis/FigureS15_S16.py \
+  --run-dir /absolute/path/to/completed_clinical_run \
+  --output-dir supplementary_figures
+```
+
+Use the completed run directory printed by the survival command, or an existing
+completed run. S15/S16 accept `--patient-table` for its full calibrated patient table. Unadjusted proportion
+analyses use 424 patients; adjusted proportion and distance analyses use 413.
+
+## Optional Slurm execution
+
+Activate your Python environment before submitting. `jobs/run_job.sh` runs any
+Python workflow command; account, partition, resources, and environment-module
+setup are supplied by the user. TCGA submission commands use the same Python
+interpreter as the submitting process, or the path set in `STPATH_PYTHON`.
+
+```bash
+export STPATH_SLURM_ACCOUNT=your_account
+export STPATH_SLURM_PARTITION=your_gpu_partition
+python Workflow/08_predict_tcga.py cohort -- submit \
+  --all-slides --audit-csv /absolute/path/to/tiff_resolution_audit.csv \
+  --output-dir "$XENIUM_ROOT/tcga_brca_prediction/cluster_75um" \
+  --cpus 8 --mem 64G --time 2-00:00:00
+```
+
+Account and partition are optional when the cluster supplies defaults; they also
+accept `--account` and `--partition` flags. `--gpus 0` runs the slide jobs on CPU.
+Add `--dry-run` to inspect submission commands before scheduling.
+
+| TCGA execution | Work assignment |
+| --- | --- |
+| `cohort -- submit` | One complete slide per job |
+| `count -- submit`, then `groups -- submit` | Count tiles, balance tile ranges across GPU jobs, then merge per slide |
+
+Grouped prediction requires the training-matched encoder weights in the local
+Hugging Face cache. Its CPU merge resources use `--merge-cpus`, `--merge-mem`,
+and `--merge-time`. All submission commands accept resource and cluster flags.
+
+For other stages, submit the generic launcher directly, for example:
+
+```bash
+sbatch --account="$STPATH_SLURM_ACCOUNT" --partition=your_cpu_partition \
+  --cpus-per-task=4 --mem=32G --time=1-00:00:00 \
+  jobs/run_job.sh Workflow/07_fit_models.py train --cell-type tumor_cells -- \
+  --parallel-model-jobs 1 --nthread 4 --combined-nthread 4
+```
+
+For arrays, a quoted `'{task}'` argument is replaced with `SLURM_ARRAY_TASK_ID`
+inside the job, for example `--outer-fold '{task}'` or `--sample-index '{task}'`.
+
+[License](LICENSE)
