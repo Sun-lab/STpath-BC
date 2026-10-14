@@ -1,0 +1,9 @@
+cell_type,include,review_status,notes
+Tumor Cells,false,approved,Retained in the denominator; not trained in this run
+Normal Epithelial Cells,false,approved,Retained in the denominator; not trained in this run
+T Cells,false,approved,Retained in the denominator; not trained in this run
+B Cells,false,approved,Retained in the denominator; not trained in this run
+pan-APCs,false,approved,Retained in the denominator; not trained in this run
+Stromal Cells,true,approved,Approved target for the stromal-cell run
+Smooth Muscle Cells,false,approved,Retained in the denominator; not trained in this run
+Uncertain,false,approved,Retained in the denominator; not trained in this run

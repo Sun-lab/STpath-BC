@@ -1,0 +1,90 @@
+{
+  "figure": "6C",
+  "endpoint": "PFI",
+  "n_patients": 413,
+  "n_events": 62,
+  "km_feature": "pan_apc_b_to_t_cells_median",
+  "group_counts": {
+    "Low": 207,
+    "High": 206
+  },
+  "logrank_p": 0.0029462483042329,
+  "logrank_q_BH": 0.0353549796507952,
+  "KM_BH_family_size": 12,
+  "KM_display_max_years": 15,
+  "days_per_year": 365.25,
+  "width_inches": 10.6,
+  "height_inches": 6.8,
+  "clinical_adjustment": [
+    "age",
+    "AJCC stage",
+    "PAM50 including Normal-like"
+  ],
+  "continuous_HR_increment": 1,
+  "continuous_distance_units": "source-proportion-weighted micrometers",
+  "binary_group_rule": "Low <= feature cohort median; High > feature cohort median",
+  "km_distance_cutpoint": 36.12957885374673,
+  "tile_side_um": 75,
+  "tile_label_cutoffs": {
+    "tumor_cells": 0.2,
+    "stromal_cells": 0.3,
+    "t_cells": 0.3,
+    "pan_apc_b": 0.3
+  },
+  "calibrated_five_type_normalization": true,
+  "self_matches": true,
+  "patient_aggregation": "Equal slide means of slide distance medians",
+  "role": "exploratory; cutoffs selected after initial analyses",
+  "models_refitted": false,
+  "source_run": "brca_tumor20_immune30_sensitivity_20261011T034523_393345Z",
+  "source_sha256": {
+    "legacy_cox_coefficients.csv": "882192562c31194b9d6bdf4eed3e05cb5ec42269ee6768f1333897d387ea181f",
+    "legacy_cox_model_status.csv": "a1de7064945969f5e112cbf07611fbe32bc2f05df6454f2bb5059177f1fa62b0",
+    "legacy_analysis_table.csv": "336805fe25d4c19596e281d33949a9263debb7ea9cd7ab2e6eb741e4d3e0b749",
+    "legacy_KM_curves.csv": "bfc339ba2f833b11ab1fb7aa8b0439bf3906ba701af9abcf910c30fcc7b80502",
+    "legacy_KM_logrank.csv": "d82ed4443b0802baa6e541aa77971e981167f6b090e089892bce48d3c13ab678"
+  },
+  "data_sha256": {
+    "figure_6c_cox_estimates.csv": "78d33a6350b25cc9ccd96aabd751bbaee2502848f269a8175dc7a987da425910",
+    "figure_6c_km_curves.csv": "71488e9febef08a69f57eccb262bdd2c21f47637c3128f9220b53e33970336de",
+    "figure_6c_km_censoring.csv": "862a98e8ef3a6879852ec2e310d73acef3e586ceaa09e7fd5df555a488f5fb9b",
+    "figure_6c_numbers_at_risk.csv": "dd13e71fe13b287f9241e0978bf9653a1f346aeff20ef5e4a9cbd9bc80ed6929"
+  },
+  "tested_environment": {
+    "python": "3.11.13",
+    "numpy": "2.2.6",
+    "pandas": "2.3.2",
+    "matplotlib": "3.10.6",
+    "runtime_dependencies": {
+      "pandas": "2.3.2",
+      "tzdata": "2025.2",
+      "pytz": "2025.2",
+      "python-dateutil": "2.9.0.post0",
+      "six": "1.17.0",
+      "numpy": "2.2.6",
+      "matplotlib": "3.10.6",
+      "pyparsing": "3.2.5",
+      "pillow": "11.3.0",
+      "packaging": "25.0",
+      "kiwisolver": "1.4.9",
+      "fonttools": "4.60.0",
+      "cycler": "0.12.1",
+      "contourpy": "1.3.3"
+    }
+  },
+  "plot_script_sha256": "8e59883ac98f1fa95b5cedd2dcf02a3cfdb0beb1f849b318cbd63171b6fe24f2",
+  "reference_png_sha256": "0aae162e5fd4206ba774fe5936ac940197e826e1d788c7805e0b22af3eed45e9",
+  "km_risk_table_gap_inches": 0.18,
+  "forest_label_gap_inches": 0.12,
+  "panel_width_ratios": [
+    1.55,
+    2.65,
+    2.35
+  ],
+  "display_labels": {
+    "pan_apc_b": "pan-APC"
+  },
+  "displayed_cox_formulation": "dichotomized at each feature cohort median",
+  "font_scale": 1.2,
+  "font_weight": "bold"
+}

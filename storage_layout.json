@@ -1,0 +1,98 @@
+{
+  "paths": {
+    "reference_labels": "reference_cell_labels",
+    "reference_annotations": "reference_cell_annotations",
+    "epithelial_labels": "epithelial_cell_labels",
+    "epithelial_annotations": "epithelial_cell_labels/final_cell_annotations",
+    "feature_root": "foundation_features/stpath_brca_training_compatible_v1",
+    "clinical_run": "tcga_brca_survival/brca_tumor20_immune30_sensitivity_20261011T034523_393345Z",
+    "prediction_runs": [
+      "tcga_brca_prediction/upgraded_75um_grouped_v1",
+      "tcga_brca_prediction/remaining_75um_completion_v1",
+      "tcga_brca_prediction/all_75um_v1"
+    ],
+    "prediction_cohort": "tcga_brca_prediction/all_75um_v1",
+    "prediction_audit": "tcga_brca_prediction/log/remaining_75um_compatibility_20261007T220625_758073Z.json",
+    "reference_crops": "supplementary_figures/S9/final_cell_labels_pptx",
+    "resolution_manifest": "tcga_brca_metadata/resolution_comparison_pilot.json",
+    "epithelial_clustering": "epithelial_clustering",
+    "signature_summary": "cell_clustering/signature_scores/combined_cluster_signature_scores_summary.csv",
+    "signature_top_two": "cell_clustering/signature_scores/combined_cluster_signature_scores_top_two.csv",
+    "clinical_patient_table": "tcga_brca_survival/brca_tumor20_immune30_sensitivity_20261011T034523_393345Z/patient_analysis_table.csv"
+  },
+  "targets": {
+    "t_cells": {
+      "cell_type": "T Cells",
+      "run_id": "t_cells_raw_v1",
+      "baseline_run_id": "t_cells_resnet50_only_v1",
+      "stem": "t_cells",
+      "annotation_source": "reference",
+      "groups": {},
+      "prevalence": null
+    },
+    "stromal_cells": {
+      "cell_type": "Stromal Cells",
+      "run_id": "stromal_cells_raw_v1",
+      "baseline_run_id": "stromal_cells_resnet50_only_v1",
+      "stem": "stromal_cells",
+      "annotation_source": "reference",
+      "groups": {},
+      "prevalence": null
+    },
+    "pan_apc_b": {
+      "cell_type": "pan-APC + B",
+      "run_id": "pan_apc_b_raw_v1",
+      "baseline_run_id": "pan_apc_b_resnet50_only_v1",
+      "stem": "pan_apc_b",
+      "annotation_source": "reference",
+      "groups": {
+        "pan-APC + B": [
+          "B Cells",
+          "pan-APCs"
+        ]
+      },
+      "prevalence": null
+    },
+    "tumor_cells": {
+      "cell_type": "Tumor Cells",
+      "run_id": "tumor_cells_06k_raw_v1",
+      "baseline_run_id": "tumor_cells_06k_resnet50_only_v1",
+      "stem": "tumor_cells_06k",
+      "annotation_source": "epithelial",
+      "groups": {},
+      "prevalence": "tumor_cells"
+    },
+    "normal_epithelial_cells": {
+      "cell_type": "Normal Epithelial Cells",
+      "run_id": "normal_epithelial_cells_06k_raw_v1",
+      "baseline_run_id": "normal_epithelial_cells_06k_resnet50_only_v1",
+      "stem": "normal_epithelial_cells_06k",
+      "annotation_source": "epithelial",
+      "groups": {},
+      "prevalence": "normal_epithelial_cells"
+    }
+  },
+  "clinical_files": {
+    "analysis_table.csv": "legacy_analysis_table.csv",
+    "analysis_config.json": "legacy_analysis_config.json",
+    "cox_coefficients.csv": "legacy_cox_coefficients.csv",
+    "cox_model_status.csv": "legacy_cox_model_status.csv",
+    "cox_patient_ids.csv": "legacy_cox_patient_ids.csv",
+    "KM_curves.csv": "legacy_KM_curves.csv",
+    "KM_logrank.csv": "legacy_KM_logrank.csv",
+    "KM_risk_tables.csv": "legacy_KM_risk_tables.csv"
+  },
+  "clinical_directory": "old_R_analysis",
+  "input_paths": {
+    "reference_labels": "final_cell_labels",
+    "reference_annotations": "final_cell_annotations",
+    "epithelial_labels": "final_cell_labels_reviewed/epithelial_review_v4_both_janesick_authors",
+    "epithelial_annotations": "final_cell_labels_reviewed/epithelial_review_v4_both_janesick_authors/final_cell_annotations",
+    "10x_epithelial": "epithelial_reclustering_gene_only",
+    "Liu_2025_epithelial": "epithelial_reclustering_gene_only",
+    "Bilous_2026_epithelial": "epithelial_reclustering",
+    "signature_summary": "cell_clustering/signature_sensitivity/combined_cluster_signature_sensitivity_summary.csv",
+    "signature_top_two": "cell_clustering/signature_sensitivity/combined_cluster_signature_sensitivity_top_two.csv",
+    "clinical_patient_table": "tcga_brca_survival/brca_reference_calibrated_75um_20261008T054404_851017Z/patient_analysis_table.csv"
+  }
+}

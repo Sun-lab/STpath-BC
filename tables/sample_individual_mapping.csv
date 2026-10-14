@@ -1,0 +1,36 @@
+dataset,sample,individual_id,individual_id_source,review_status,notes
+10x,Xenium_V1_FFPE_Human_Breast_IDC,10x__IDC,name_inference,approved,Proposed same individual as IDC_With_Addon; verify against 10x metadata
+10x,Xenium_V1_FFPE_Human_Breast_IDC_With_Addon,10x__IDC,name_inference,approved,Proposed same individual as IDC base panel; verify against 10x metadata
+10x,Xenium_V1_FFPE_Human_Breast_ILC,10x__ILC,name_inference,approved,Proposed same individual as ILC_With_Addon; verify against 10x metadata
+10x,Xenium_V1_FFPE_Human_Breast_ILC_With_Addon,10x__ILC,name_inference,approved,Proposed same individual as ILC base panel; verify against 10x metadata
+Bilous_2026,B10_GSM9509164,Bilous_2026__B10,name_inference,approved,Sample name identifies B10; verify against study metadata
+Bilous_2026,B11_GSM9509163,Bilous_2026__B11,name_inference,approved,Sample name identifies B11; verify against study metadata
+Bilous_2026,B12_GSM9509162,Bilous_2026__B12,name_inference,approved,Sample name identifies B12; verify against study metadata
+Bilous_2026,B13_GSM9509161,Bilous_2026__B13,name_inference,approved,Sample name identifies B13; verify against study metadata
+Bilous_2026,B14_GSM9509159,Bilous_2026__B14,name_inference,approved,Sample name identifies B14; verify against study metadata
+Bilous_2026,B15_GSM9509158,Bilous_2026__B15,name_inference,approved,Sample name identifies B15; verify against study metadata
+Bilous_2026,B16_GSM9509157,Bilous_2026__B16,name_inference,approved,Sample name identifies B16; verify against study metadata
+Bilous_2026,B17_GSM9509156,Bilous_2026__B17,name_inference,approved,Sample name identifies B17; verify against study metadata
+Bilous_2026,B1_3_GSM9509174,Bilous_2026__B1,name_inference,approved,Sample name suggests section or replicate 3 from B1; verify against study metadata
+Bilous_2026,B5_GSM9509171,Bilous_2026__B5,name_inference,approved,Sample name identifies B5; verify against study metadata
+Bilous_2026,B6_GSM9509169,Bilous_2026__B6,name_inference,approved,Sample name identifies B6; verify against study metadata
+Bilous_2026,B7_GSM9509168,Bilous_2026__B7,name_inference,approved,Sample name identifies B7; verify against study metadata
+Bilous_2026,B8_GSM9509167,Bilous_2026__B8,name_inference,approved,Sample name identifies B8; verify against study metadata
+Bilous_2026,B9_GSM9509166,Bilous_2026__B9,name_inference,approved,Sample name identifies B9; verify against study metadata
+Janesick_2023,Xenium_FFPE_Human_Breast_Cancer_Rep1,Janesick_2023__Breast_Cancer,name_inference,approved,Proposed same individual as Rep2; verify whether these are serial sections
+Janesick_2023,Xenium_FFPE_Human_Breast_Cancer_Rep2,Janesick_2023__Breast_Cancer,name_inference,approved,Proposed same individual as Rep1; verify whether these are serial sections
+Janesick_2023,Xenium_V1_FFPE_Preview_Human_Breast_Cancer_Sample_2,Janesick_2023__Preview_Sample_2,name_inference,approved,Proposed distinct individual; verify against study metadata
+Janesick_2025,Human_Breast_Biomarkers_S1_Bot,Janesick_2025__S1,name_inference,approved,Proposed same individual as S1 Mid and Top; verify against study metadata
+Janesick_2025,Human_Breast_Biomarkers_S1_Mid,Janesick_2025__S1,name_inference,approved,Proposed same individual as S1 Bot and Top; verify against study metadata
+Janesick_2025,Human_Breast_Biomarkers_S1_Top,Janesick_2025__S1,name_inference,approved,Proposed same individual as S1 Bot and Mid; verify against study metadata
+Janesick_2025,Human_Breast_Biomarkers_S2_Bot,Janesick_2025__S2,name_inference,approved,Proposed same individual as S2 Mid and Top; verify against study metadata
+Janesick_2025,Human_Breast_Biomarkers_S2_Mid,Janesick_2025__S2,name_inference,approved,Proposed same individual as S2 Bot and Top; verify against study metadata
+Janesick_2025,Human_Breast_Biomarkers_S2_Top,Janesick_2025__S2,name_inference,approved,Proposed same individual as S2 Bot and Mid; verify against study metadata
+Janesick_2025,Human_Breast_Biomarkers_S3_Bot,Janesick_2025__S3,name_inference,approved,Proposed same individual as S3 Mid and Top; verify against study metadata
+Janesick_2025,Human_Breast_Biomarkers_S3_Mid,Janesick_2025__S3,name_inference,approved,Proposed same individual as S3 Bot and Top; verify against study metadata
+Janesick_2025,Human_Breast_Biomarkers_S3_Top,Janesick_2025__S3,name_inference,approved,Proposed same individual as S3 Bot and Mid; verify against study metadata
+Janesick_2025,Human_Breast_Biomarkers_S4_Bot,Janesick_2025__S4,name_inference,approved,Proposed same individual as S4 Mid and Top; verify against study metadata
+Janesick_2025,Human_Breast_Biomarkers_S4_Mid,Janesick_2025__S4,name_inference,approved,Proposed same individual as S4 Bot and Top; verify against study metadata
+Janesick_2025,Human_Breast_Biomarkers_S4_Top,Janesick_2025__S4,name_inference,approved,Proposed same individual as S4 Bot and Mid; verify against study metadata
+Liu_2025,Xenium_V1_FFPE_Human_Breast_IDC_Big_1,Liu_2025__IDC_Big,name_inference,approved,Proposed same individual as IDC_Big_2; verify against study metadata
+Liu_2025,Xenium_V1_FFPE_Human_Breast_IDC_Big_2,Liu_2025__IDC_Big,name_inference,approved,Proposed same individual as IDC_Big_1; verify against study metadata
